@@ -1,0 +1,43 @@
+services:
+  nestjs_api:
+    build:
+      context: ./backend/
+      dockerfile: Dockerfile
+    depends_on:
+      - postgres-db
+    ports:
+      - '4321:3000'
+    environment:
+      - PORT=3000
+      - POSTGRESHOST=${POSTGRESHOST}
+      - POSTGRESUSR=${POSTGRESUSR}
+      - POSTGRESPSW=${POSTGRESPSW}
+      - POSTGRESDB=${POSTGRESDB}
+      - DATABASE_URL=${DATABASE_URL}
+    volumes:
+      - ./backend/src:/app/src
+  
+  postgres-db:
+    image: postgres:16
+    environment:
+      - POSTGRES_USER=${POSTGRESUSR}
+      - POSTGRES_PASSWORD=${POSTGRESPSW}
+      - POSTGRES_DB=${POSTGRESDB}
+    volumes:
+      - data:/var/lib/postgresql/data
+    ports:
+      - '5432:5432'
+  
+  postgres-admin:
+    image: dpage/pgadmin4:8
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=${PGADMINMAIL}
+      - PGADMIN_DEFAULT_PASSWORD=${PGADMINPASS}
+      - PGADMIN_DEFAULT_PORT=${PGADMINPORT}
+    ports:
+      - '5050:80'
+    depends_on:
+      - postgres-db
+
+volumes:
+  data:
