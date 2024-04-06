@@ -38,4 +38,6 @@ model Prenotazione {
   prenotante    Utente @relation(fields: [id_prenotante], references: [id])
   id_ristorante Int
   ristorante    Ristorante @relation(fields:[id_ristorante], references: [id])
+  fasciaOraria  String
+  numeroPersone Int
 }
