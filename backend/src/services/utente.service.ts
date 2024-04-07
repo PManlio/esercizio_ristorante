@@ -1,13 +1,14 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import { Utente, Prisma } from '@prisma/client';
 import { SecurityService } from '../security/security.service';
+import { JwtService } from 'src/security/jwt.service';
 
 
 @Injectable()
 export class UtenteService {
     
-    constructor(private prisma: PrismaService, private security: SecurityService) {}
+    constructor(private prisma: PrismaService, private security: SecurityService, private jwt: JwtService) {}
 
     async utente(utenteWhereUniqueInput: Prisma.UtenteWhereUniqueInput): Promise<Utente | null> {
         return this.prisma.utente.findUnique({
@@ -29,10 +30,9 @@ export class UtenteService {
     }
 
     async createUtente(data: Prisma.UtenteCreateInput): Promise<Utente> {
-        this.security.generatePassword(data["password"]).then(hash => {
+        return this.security.generatePassword(data["password"]).then(hash => {
             data["password"] = hash;
-        })
-        return this.prisma.utente.create({data});
+        }).then(() => this.prisma.utente.create({data}));
     }
 
     async updateUtente(params: {
@@ -48,5 +48,17 @@ export class UtenteService {
 
     async deleteUtente(where: Prisma.UtenteWhereUniqueInput): Promise<Utente> {
         return this.prisma.utente.delete({where});
+    }
+
+    async login(data: {username:string; password:string;}): Promise<{user: Utente, token: string} | NotFoundException | UnauthorizedException> {
+        const utente = await this.prisma.utente.findUnique({
+            where: {
+                username: data.username,
+            }
+        });
+        if(!utente) return new NotFoundException("Utente non trovato");
+        let isUser = await this.security.comparePassword(data.password, utente.password);
+        let jwt    = this.jwt.createJwt(utente.username)
+        return isUser ? {user: utente, token: jwt} : new UnauthorizedException ("Username o password errati"); 
     }
 }

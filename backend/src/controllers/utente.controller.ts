@@ -1,8 +1,9 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, NotFoundException, Param, Post, Put, UnauthorizedException } from '@nestjs/common';
 import { UtenteService } from 'src/services/utente.service';
 import { Utente } from '@prisma/client';
-import { ApiBody } from '@nestjs/swagger';
+import { ApiBody, ApiProperty } from '@nestjs/swagger';
 import { UtenteModel } from 'src/models/UtenteModel';
+import { LoginModel } from 'src/models/LoginModel';
 
 @Controller('/utente')
 export class UtenteController {
@@ -25,5 +26,39 @@ export class UtenteController {
     @Get('/list')
     async getAllUtenti(): Promise<Utente[]> {
         return this.utente.utenti({});
+    }
+
+    @Post('/login')
+    @ApiBody({
+        description: "POST Login",
+        type: LoginModel
+    })
+    async login(@Body() login: {
+        username: string;
+        password: string;
+    }): Promise<{user: Utente, token: string} | NotFoundException | UnauthorizedException> {
+        return this.utente.login(login)
+    }
+
+    @Delete()
+    @ApiBody({
+        description: "Delete utente",
+        schema: { properties: { 'id': { type: 'number' }} }
+    })
+    async deleteUser(@Body() userid:{id: number}) {
+        return this.utente.deleteUtente(userid);
+    }
+
+    @Put('/update/:id')
+    @ApiBody({
+        description: "Aggiorna i campi utente",
+        type: UtenteModel
+    })
+    async updateUser(@Param('id') idUtente: number , @Body() datiUtente: { 
+        username?: string;
+        email?: string;
+        password?: string;
+    }): Promise<Utente> {
+        return this.utente.updateUtente({where: {id:idUtente}, data: datiUtente});
     }
 }
