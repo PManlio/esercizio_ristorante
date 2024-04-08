@@ -1,9 +1,10 @@
-import { Body, Controller, Delete, Get, NotFoundException, Param, Post, Put, UnauthorizedException } from '@nestjs/common';
+import { Body, Controller, Delete, Get, NotFoundException, Param, Post, Put, UnauthorizedException, UseGuards } from '@nestjs/common';
 import { UtenteService } from 'src/services/utente.service';
 import { Utente } from '@prisma/client';
-import { ApiBody, ApiProperty } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiHeader, ApiSecurity } from '@nestjs/swagger';
 import { UtenteModel } from 'src/models/UtenteModel';
 import { LoginModel } from 'src/models/LoginModel';
+import { JwtGuard } from 'src/guards/jwt.guard';
 
 @Controller('/utente')
 export class UtenteController {
@@ -24,6 +25,8 @@ export class UtenteController {
 
     // per test momentaneo
     @Get('/list')
+    @ApiBearerAuth()
+    @UseGuards(JwtGuard)
     async getAllUtenti(): Promise<Utente[]> {
         return this.utente.utenti({});
     }

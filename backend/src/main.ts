@@ -8,6 +8,12 @@ async function bootstrap() {
 
   const config = new DocumentBuilder().setTitle('Esercizio Ristorante')
                                       .setDescription('Esercizio di introduzione a React e NestJS')
+                                      .addBearerAuth()
+                                      /*.addSecurity('bearer', {
+                                        type: 'http',
+                                        scheme: 'bearer',
+                                        name: 'Authorization'
+                                      })*/
                                       .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
