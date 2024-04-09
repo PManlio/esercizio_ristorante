@@ -55,13 +55,13 @@ export class UtenteController {
     @Put('/update/:id')
     @ApiBody({
         description: "Aggiorna i campi utente",
-        type: UtenteModel
+        schema: { properties: { username: { type: 'string' }, email: { type: 'string' }, password: { type: 'string' } } }
     })
     async updateUser(@Param('id') idUtente: number , @Body() datiUtente: { 
         username?: string;
         email?: string;
         password?: string;
     }): Promise<Utente> {
-        return this.utente.updateUtente({where: {id:idUtente}, data: datiUtente});
+        return this.utente.updateUtente({where: {id:+idUtente}, data: datiUtente});
     }
 }

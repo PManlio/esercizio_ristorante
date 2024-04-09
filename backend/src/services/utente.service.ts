@@ -39,6 +39,7 @@ export class UtenteService {
         where: Prisma.UtenteWhereUniqueInput;
         data: Prisma.UtenteUpdateInput;
     }) : Promise<Utente> {
+        if(params["data"]["password"]) params["data"]["password"] = await this.security.generatePassword(params["data"]["password"]);
         const { where, data } = params;
         return this.prisma.utente.update({
             data,
