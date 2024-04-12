@@ -9,15 +9,19 @@ export class PrenotazioneService {
     constructor(private prisma: PrismaService, private ristorante: RistoranteService) { }
 
     async createPrenotazione(data: Prisma.PrenotazioneCreateInput): Promise<Prenotazione | false> {
-       
+        
         // devo trovare il ristorante che sto prenotando perché mi devo calcolare delle informazioni
         const trovaRistorante = await this.ristorante.ristorante({id: data.ristorante.connect.id });
         
+        console.log("Ristorante trovato", trovaRistorante)
+
         // del ristorante soprastante, devo trovare le sue prenotazioni
         const trovaPrenotazioniRistorante = await this.getAllPrenotazioni({
             where: { id_ristorante: trovaRistorante.id }
         });
         
+        console.log("trovo prenotazioni ristoranti: ", trovaPrenotazioniRistorante);
+
         // controllo se sono già presenti prenotazioni per quel ristorante, altrimenti (fuori if) la creo direttamente
         if(trovaPrenotazioniRistorante && trovaPrenotazioniRistorante.length > 0) {
             
@@ -50,9 +54,12 @@ export class PrenotazioneService {
         cursor?: Prisma.PrenotazioneWhereUniqueInput;
         where?: Prisma.PrenotazioneWhereInput;
         orderBy?: Prisma.PrenotazioneOrderByWithRelationInput;
-    }): Promise<Prenotazione[]> { 
+    }, selectPrenotanti: boolean = false, selectRistoranti: boolean = false): Promise<Prenotazione[]> { 
         const {skip, take, cursor, where, orderBy} = params;
-        return this.prisma.prenotazione.findMany({skip, take, cursor, where, orderBy});
+        return this.prisma.prenotazione.findMany({skip, take, cursor, where, orderBy, include: {
+            ristorante: selectRistoranti,
+            prenotante: selectPrenotanti,
+        }});
     }
 
     async updatePrenotazione(params: {

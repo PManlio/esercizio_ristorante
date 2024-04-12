@@ -26,8 +26,8 @@ export class UtenteController {
 
     // per test momentaneo
     @Get('/list')
-    @ApiBearerAuth()
-    @UseGuards(JwtGuard)
+    // @ApiBearerAuth()
+    // @UseGuards(JwtGuard)
     async getAllUtenti(): Promise<Utente[]> {
         return this.utente.utenti({});
     }
