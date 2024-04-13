@@ -15,18 +15,13 @@ export class RistoranteController {
     constructor(private readonly ristorante: RistoranteService){}
 
     @Get('/ristorante/:id')
-    @ApiParam({
-        name: 'id ristorante',
-        description: 'query per ottenere un singolo ristorante',
-        schema: { properties: { id: { type: 'number' } } }
-    })
     async getRistorante(@Param('id') idRistorante: number): Promise<Ristorante | NotFoundException> {
-        return this.ristorante.ristorante({id: idRistorante});
+        return this.ristorante.ristorante({id: +idRistorante});
     }
 
     @Post('/list')
     @ApiBody({
-        description: 'restituisce la lista dei ristoranti. Lasciare vuoto il body per ottenere tutti i ristoranti',
+        description: 'restituisce la lista dei ristoranti. Lasciare vuoti gli array per ottenere tutti i ristoranti',
         schema: {
             properties: {
                 tipo_cucina: {type: 'array', items: {type: 'string'}},
@@ -93,7 +88,7 @@ export class RistoranteController {
 
     @Delete('/delete/:id')
     async deleteRistorante(@Param('id') id: number): Promise<Ristorante> {
-        return this.ristorante.deleteRistorante({ id });
+        return this.ristorante.deleteRistorante({ id: +id });
     }
 
 }
