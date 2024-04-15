@@ -1,5 +1,10 @@
+import Navbar from "../../shared/Navbar"
+
 export default function GestionePrenotazione() {
     return (
-        <div>gestione prenotazione!</div>
+        <>
+            <Navbar/>
+            <div>gestione prenotazione!</div>
+        </>
     )
 } 
