@@ -9,6 +9,11 @@ export class JwtGuard implements CanActivate{
 
     canActivate(context: ExecutionContext): boolean | Promise<boolean> | Observable<boolean> {
         const req = context.switchToHttp().getRequest();
-        return req.headers['authorization'] ? this.jwtService.verificaJwt(req.headers["authorization"].split(' ')[1]) : false; // Bearer <token> -> prendiamo il token
+        try {
+            return req.headers['authorization'] ? this.jwtService.verificaJwt(req.headers["authorization"].split(' ')[1]) : false; // Bearer <token> -> prendiamo il token
+        } catch(err) {
+            console.log(err);
+            return false;
+        }
     }
 }

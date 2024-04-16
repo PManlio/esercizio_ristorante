@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { Ristorante } from "../../interfaces/ristorante";
+import { useMutation, useQuery } from "@tanstack/react-query";
 
 /* interface Ristorante {
     id: number;
@@ -16,7 +17,7 @@ export default function CardRistorante(props: { ristorante: Ristorante }) {
 
     return (
         <>
-            <a className="block max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow bg-gray-800 border-gray-700">
+            <div id={"'"+props.ristorante.id+"'"} className="block max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow bg-gray-800 border-gray-700">
 
                 <h5 className="mb-4 text-2xl font-bold tracking-tight text-gray-900 text-white">{props.ristorante.nome}</h5>
                 <p className="font-normal text-gray-700 text-gray-400 mb-4">{
@@ -37,11 +38,11 @@ export default function CardRistorante(props: { ristorante: Ristorante }) {
 
                 <p className="font-normal text-gray-700 text-gray-400 mb-4">{props.ristorante.indirizzo}</p>
                 <div>
-                    <a onClick={async() => navigate('/prenotazione')} type="button" className="bg-transparent hover:bg-sky-500 text-sky-500 font-semibold hover:text-white py-2 px-4 border border-sky-500 hover:border-transparent rounded">
+                    <a onClick={async() => navigate('/prenotazione', { state: { ristoranteId: props.ristorante.id } } )} type="button" className="bg-transparent hover:bg-sky-500 text-sky-500 font-semibold hover:text-white py-2 px-4 border border-sky-500 hover:border-transparent rounded">
                         Prenota {/** @TODO: cambia il navigate dell'onClick in una funzione che prima si salva lo stato del ristorante e poi fa il navigate */}
                     </a>
                 </div>
-            </a>
+            </div>
         </>
 
     )
