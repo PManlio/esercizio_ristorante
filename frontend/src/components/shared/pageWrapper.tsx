@@ -3,6 +3,7 @@ import AuthPage from "../pages/login/AuthPage";
 import Home from "../pages/home/Home";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import GestionePrenotazione from "../pages/gestionePrenotazione/GestionePrenotazione";
+import DettaglioAccount from "../pages/dettaglioAccount/DettaglioAccount";
 
 const queryClient = new QueryClient();
 
@@ -18,6 +19,10 @@ const router = createBrowserRouter([
     {
         path: '/prenotazione',
         element: <GestionePrenotazione/>
+    },
+    {
+        path: '/account',
+        element: <DettaglioAccount />
     }
 ])
 

@@ -1,6 +1,5 @@
 import { useNavigate } from "react-router-dom";
 import { Ristorante } from "../../interfaces/ristorante";
-import { useMutation, useQuery } from "@tanstack/react-query";
 
 /* interface Ristorante {
     id: number;
