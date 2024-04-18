@@ -14,7 +14,6 @@ export default function Home() {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'pass-ristorante': 'ristorante-bodyguard',
             },
             body: JSON.stringify({ "tipo_cucina": tipoCucina, "fasce_orarie": fasceOrarie })
         }).then(res => res.json()).then((data) => {

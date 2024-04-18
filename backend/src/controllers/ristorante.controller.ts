@@ -6,11 +6,6 @@ import { RistoranteService } from "src/services/ristorante.service";
 
 @Controller('/ristorante')
 @ApiTags("ristorante")
-@ApiHeader({
-    name: 'pass-ristorante',
-    description: 'stringa statica per avviare le API /ristorante; è definita come: ristorante-bodyguard',
-})
-@UseGuards(RistoranteGuard)
 export class RistoranteController {
     constructor(private readonly ristorante: RistoranteService){}
 
@@ -41,6 +36,10 @@ export class RistoranteController {
     }
 
     @Post('/crea')
+    @ApiHeader({
+        name: 'pass-ristorante',
+        description: 'stringa statica per avviare le API /ristorante; è definita come: ristorante-bodyguard',
+    })
     @ApiBody({
         description: 'inserisci i dati per creare un nuovo ristorante',
         schema: {
@@ -53,6 +52,7 @@ export class RistoranteController {
             }
         }
     })
+    @UseGuards(RistoranteGuard)
     async creaRistorante(@Body() datiRistorante: {
         nome: string;
         indirizzo: string;
@@ -64,6 +64,10 @@ export class RistoranteController {
     }
 
     @Put('/update/:id')
+    @ApiHeader({
+        name: 'pass-ristorante',
+        description: 'stringa statica per avviare le API /ristorante; è definita come: ristorante-bodyguard',
+    })
     @ApiBody({
         description: 'modifica i dati di un ristorante, scelto tramite (parametro url) id',
         schema: {
@@ -71,11 +75,12 @@ export class RistoranteController {
                 nome: {type: 'string'},
                 indirizzo: {type: 'string'},
                 tipo_cucina: {type: 'array', items: {type: 'string'}},
-                max_coperti: {type: 'string'},
+                max_coperti: {type: 'number'},
                 fasce_orarie: {type: 'array', items: {type: 'string'}},
             }
         }
     })
+    @UseGuards(RistoranteGuard)
     async updateRistorante(@Param('id') idRistorante: number, @Body() datiUpdate: {
         nome?: string;
         indirizzo?: string;

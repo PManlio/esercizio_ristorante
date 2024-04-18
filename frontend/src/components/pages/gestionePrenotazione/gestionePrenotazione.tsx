@@ -16,10 +16,7 @@ export default function GestionePrenotazione() {
         queryKey: ["ristorante"],
         queryFn: async () => {
             return await fetch("http://localhost:4321/ristorante/ristorante/" + location.state.ristoranteId, {
-                method: 'GET',
-                headers: {
-                    'pass-ristorante': 'ristorante-bodyguard',
-                }
+                method: 'GET'
             }).then(res => res.json()).then(data => data as Ristorante | undefined)
         }
     })
