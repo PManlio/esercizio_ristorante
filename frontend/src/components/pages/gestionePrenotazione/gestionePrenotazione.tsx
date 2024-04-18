@@ -61,6 +61,13 @@ export default function GestionePrenotazione() {
                     <a onClick={async () => navigate('/')} className="justify-self-end hover:cursor-pointer border-b-indigo-500 text-indigo-500 border-b-2 hover:boder-b-white-500 hover:text-white-500">Torna indietro</a>
                 </div>
                 <p className="text-white">{ristorante?.indirizzo}</p>
+                <p className="text-white">Orari:<br/>{
+                                        ristorante?.fasce_orarie.map(fo => (
+                                            <>
+                                                <span>{fo}</span> <br/>
+                                            </>
+                                        ))
+                                    }</p>
 
                 <form className="mt-8">
                     <div className="flex flex-wrap -mx-3 mb-2">
@@ -126,7 +133,12 @@ function postPrenotazione(fasciaOraria: string, numeroPersone: number | string, 
                         break;
                 
                     default:
+                        if(!data) {
+                            alert("Superi la soglia dei coperti! Non puoi prenotare per questa fascia oraria") 
+                            break;
+                        }
                         alert('prenotazione effettuata con successo')
+                        navigate('/home')
                         break;
                 }
             })
